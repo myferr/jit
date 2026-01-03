@@ -19,7 +19,7 @@ module Jit
         end
 
         files = staged_files.split("\n")
-        puts Color.header("Files to be committed:")
+        puts Color.section_header("Files to be committed:")
         files.each { |f| puts "  #{Color.staged_file(f)}" }
         puts
 
@@ -48,7 +48,7 @@ module Jit
           return 1
         end
 
-        puts Color.header("Files to be committed:")
+        puts Color.section_header("Files to be committed:")
         staged_files.split("\n").each { |f| puts "  #{Color.staged_file(f)}" }
         puts
 
