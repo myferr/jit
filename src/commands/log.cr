@@ -44,7 +44,7 @@ module Jit
 
       private def display_commits(commits : Array, show_files : Bool)
         commits.each do |commit|
-          puts "#{Color.green("●")} #{Color.commit_hash(commit[:hash])}  #{commit[:message]}"
+          puts "#{Color.green("●")} #{Color.commit_hash(commit[:hash])}  #{Color.committed(commit[:message])}"
           puts "│  #{Color.info(commit[:author])} · #{Color.dim(commit[:time])}"
           puts "│"
         end
