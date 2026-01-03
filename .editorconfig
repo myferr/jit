@@ -1,4 +1,3 @@
-root = true
 
 [*.cr]
 charset = utf-8
