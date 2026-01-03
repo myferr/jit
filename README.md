@@ -7,6 +7,8 @@ Built with Crystal for fast, compiled CLI performance. jit covers the most commo
 ## Features
 
 - **Beautiful output** - Clean, readable, and color-coded command outputs
+- **Improved transparency** - Shows commit details, diff summaries, and staging context
+- **Better TUI** - Enhanced diff and stage commands with visual structure
 - **Safe defaults** - Prevents common mistakes with built-in safety checks
 - **Fast execution** - Compiled Crystal binary for instant startup
 - **Git-compatible** - Seamlessly forwards unknown commands to git
@@ -223,7 +225,7 @@ jit log --files
 
 #### `jit diff`
 
-Show changes clearly with minimal, readable coloring.
+Show changes with enhanced TUI and better UX than vanilla git.
 
 ```bash
 # Show unstaged changes
@@ -239,23 +241,36 @@ jit diff src/parser.cr
 **Output**
 
 ```
---- a/src/parser.cr
-+++ b/src/parser.cr
-@@ -10,7 +10,7 @@ class Parser
-   def initialize
-     @tokens = [] of Token
--    @index = 0
-+    @index = 1
-     @current_token = nil
-   end
+┌ Unstaged changes
+│ 1 file(s) changed
+│ +1 addition
+│ -1 deletion
+└
+
+┌─ src/parser.cr
+│
+│ index 163eb75..07ca540 100644
+│ --- a/src/parser.cr
+│ +++ b/src/parser.cr
+│ @@ -10,7 +10,7 @@ class Parser
+│    def initialize
+│      @tokens = [] of Token
+│  -    @index = 0
+│  +    @index = 1
+│      @current_token = nil
+│    end
+└
 ```
 
 **Features:**
 
-- Minimal, readable coloring
-- Shows unstaged changes by default
-- Uses unified diff format
-- No pager unless output exceeds screen
+- Box-drawing characters for visual structure
+- Summary showing total files, additions, and deletions
+- Each diff wrapped in its own box for clear separation
+- Color-coded lines: green additions, red deletions, cyan hunk headers
+- Support for file paths (e.g., `jit diff src/parser.cr`)
+- Summary accurately reflects only requested files
+- Better than vanilla git diff experience
 
 ---
 
@@ -375,7 +390,7 @@ Pull completed
 
 #### `jit push`
 
-Push with context awareness.
+Push with context awareness and commit details.
 
 ```bash
 # Normal push
@@ -388,7 +403,7 @@ jit push --force
 jit push --explain
 ```
 
-**Explain Mode:**
+**Explain Mode**
 
 ```bash
 jit push --explain
@@ -399,18 +414,40 @@ This will push:
   force: false
 ```
 
+**Push Output**
+
+```bash
+jit push
+Commits to be pushed:
+
+● 8f2a1c3  feat: add fallback execution
+│  user · 2 hours ago
+│
+
+● 91dbe42  fix: branch detection
+│  user · yesterday
+│
+
+Pushing 2 commit(s)
+
+Push completed
+```
+
 **Behavior:**
 
 - Infers upstream if missing
-- Shows commit count before pushing
+- Shows commit details (hash, author, time, message) before pushing
+- Displays commit count before pushing
 - Warns on force pushes
 - Requires confirmation for force pushes
+- Provides full transparency about what will be pushed
 
 **Safety:**
 
 - Force push requires explicit confirmation
 - Shows what will happen before execution
 - Prevents accidental history rewrites
+- Shows all commit details before pushing
 
 ---
 
@@ -451,6 +488,45 @@ stash@{1}: WIP: 2024-01-14 09:15
 - Simple pop to restore changes
 
 ---
+
+#### `jit stage`
+
+Display staging status with TUI similar to log.
+
+```bash
+jit stage
+```
+
+**Output**
+
+```
+Stage Status
+
+Modified files (unstaged):
+  ~ src/parser.cr
+  ~ src/lexer.cr
+
+Staged files:
+  + src/ast.cr
+  + README.md
+
+Untracked files:
+  ? jit.lock
+```
+
+**Features:**
+
+- Shows modified (unstaged) files
+- Shows staged files ready to commit
+- Shows untracked files
+- Clean, organized display with proper color coding
+- Similar UX to log command
+
+**Use cases:**
+
+- Quick overview of what's staged vs unstaged
+- Understanding repository state before committing
+- Checking which files are tracked vs untracked
 
 #### `jit man`
 
