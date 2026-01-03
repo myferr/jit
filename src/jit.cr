@@ -97,35 +97,37 @@ module Jit
       end
     end
 
-    private def execute_command(command : Command)
-      case command.name
-      when "status"
-        Commands::Status.run
-      when "add"
-        Commands::Add.run(command.args)
-      when "commit"
-        Commands::Commit.run(command.options["message"]?.as(String?))
-      when "log"
-        Commands::Log.run(command.options)
-      when "diff"
-        Commands::Diff.run(command.options["staged"]?.as(Bool?) || false)
-      when "branch"
-        Commands::Branch.run(command.args, command.options)
-      when "switch"
-        Commands::Switch.run(command.args)
-      when "pull"
-        Commands::Pull.run(command.options["force"]?.as(Bool?) || false)
-      when "push"
-        Commands::Push.run(command.options)
-      when "stash"
-        Commands::Stash.run(command.args)
-      else
-        Commands::Passthrough.run(command.name, command.args, command.options)
+      private def execute_command(command : Command)
+        case command.name
+        when "status"
+          Commands::Status.run
+        when "add"
+          Commands::Add.run(command.args)
+        when "commit"
+          Commands::Commit.run(command.options["message"]?.as(String?))
+        when "log"
+          Commands::Log.run(command.options)
+        when "diff"
+          Commands::Diff.run(command.options["staged"]?.as(Bool?) || false, command.args)
+        when "branch"
+          Commands::Branch.run(command.args, command.options)
+        when "switch"
+          Commands::Switch.run(command.args)
+        when "pull"
+          Commands::Pull.run(command.options["force"]?.as(Bool?) || false)
+        when "push"
+          Commands::Push.run(command.options)
+        when "stash"
+          Commands::Stash.run(command.args)
+        when "stage"
+          Commands::Stage.run
+        else
+          Commands::Passthrough.run(command.name, command.args, command.options)
+        end
+      rescue e : Exception
+        STDERR.puts Color.error("Error: #{e.message}")
+        return 1
       end
-    rescue e : Exception
-      STDERR.puts Color.error("Error: #{e.message}")
-      return 1
-    end
 
     private def show_manual
       manual = Manual.text
