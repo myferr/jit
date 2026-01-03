@@ -13,19 +13,19 @@ module Jit
         puts
 
         unless staged_files.empty?
-          puts Color.header("Staged (#{staged_files.size})")
+          puts Color.section_header("Staged (#{staged_files.size})")
           staged_files.each { |f| puts "  + #{Color.staged_file(f)}" }
           puts
         end
 
         unless unstaged_files.empty?
-          puts Color.header("Unstaged (#{unstaged_files.size})")
-          unstaged_files.each { |f| puts "  ~ #{Color.unstaged_file(f)}" }
+          puts Color.section_header("Unstaged (#{unstaged_files.size})")
+          unstaged_files.each { |f| puts "  ~ #{Color.modified(f)}" }
           puts
         end
 
         unless untracked_files.empty?
-          puts Color.header("Untracked (#{untracked_files.size})")
+          puts Color.section_header("Untracked (#{untracked_files.size})")
           untracked_files.each { |f| puts "  ? #{Color.untracked_file(f)}" }
           puts
         end
